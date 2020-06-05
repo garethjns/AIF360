@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import numpy as np
 
 from aif360.algorithms import Transformer
@@ -82,7 +77,8 @@ class Reweighing(Transformer):
         Args:
             dataset (BinaryLabelDataset): Dataset that needs to be transformed.
         Returns:
-            dataset (BinaryLabelDataset): Transformed dataset.
+            dataset (BinaryLabelDataset): Dataset with transformed
+                instance_weights attribute.
         """
 
         dataset_transformed = dataset.copy(deepcopy=True)

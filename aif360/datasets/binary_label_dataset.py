@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import numpy as np
 
 from aif360.datasets import StructuredDataset
@@ -33,6 +28,10 @@ class BinaryLabelDataset(StructuredDataset):
             ValueError: `favorable_label` and `unfavorable_label` must be the
                 only values present in `labels`.
         """
+        # fix scores before validating
+        if np.all(self.scores == self.labels):
+            self.scores = np.float64(self.scores == self.favorable_label)
+
         super(BinaryLabelDataset, self).validate_dataset()
 
         # =========================== SHAPE CHECKING ===========================
@@ -47,6 +46,3 @@ class BinaryLabelDataset(StructuredDataset):
                 set([self.favorable_label, self.unfavorable_label])):
             raise ValueError("The favorable and unfavorable labels provided do "
                              "not match the labels in the dataset.")
-
-        if np.all(self.scores == self.labels):
-            self.scores = (self.scores == self.favorable_label).astype(np.float64)

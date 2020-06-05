@@ -28,11 +28,6 @@
 # under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import numpy as np
 
 from aif360.algorithms import Transformer
@@ -176,15 +171,15 @@ class CalibratedEqOddsPostprocessing(Transformer):
             dataset.protected_attribute_names,
             self.unprivileged_groups)
 
-        priv_indices = (np.random.random(sum(cond_vec_priv))
-                     <= self.priv_mix_rate)
-        priv_new_pred = dataset.scores[cond_vec_priv].copy()
-        priv_new_pred[priv_indices] = self.base_rate_priv
-
         unpriv_indices = (np.random.random(sum(cond_vec_unpriv))
                        <= self.unpriv_mix_rate)
         unpriv_new_pred = dataset.scores[cond_vec_unpriv].copy()
         unpriv_new_pred[unpriv_indices] = self.base_rate_unpriv
+
+        priv_indices = (np.random.random(sum(cond_vec_priv))
+                     <= self.priv_mix_rate)
+        priv_new_pred = dataset.scores[cond_vec_priv].copy()
+        priv_new_pred[priv_indices] = self.base_rate_priv
 
         dataset_new = dataset.copy(deepcopy=True)
 
@@ -213,4 +208,4 @@ def weighted_cost(fp_rate, fn_rate, cm, privileged):
             * (1 - cm.base_rate(privileged=privileged))) +
            (fn_rate / norm_const
             * cm.generalized_false_negative_rate(privileged=privileged)
-            * (1 - cm.base_rate(privileged=privileged))))
+            * cm.base_rate(privileged=privileged)))

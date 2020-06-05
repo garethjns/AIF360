@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from collections import defaultdict
 from contextlib import contextmanager
 from copy import deepcopy
@@ -153,6 +148,27 @@ class StructuredDataset(Dataset):
             unprivileged_protected_attributes=unprivileged_protected_attributes,
             privileged_protected_attributes=privileged_protected_attributes,
             metadata=metadata)
+
+
+    def subset(self, indexes):
+        """ Subset of dataset based on position
+        Args:
+            indexes: iterable which contains row indexes
+
+        Returns:
+            `StructuredDataset`: subset of dataset based on indexes
+        """
+        # convert each element of indexes to string
+        indexes_str = [self.instance_names[i] for i in indexes]
+        subset = self.copy()
+        subset.instance_names = indexes_str
+        subset.features = self.features[indexes]
+        subset.labels = self.labels[indexes]
+        subset.instance_weights = self.instance_weights[indexes]
+        subset.protected_attributes = self.protected_attributes[indexes]
+        subset.scores = self.scores[indexes]
+        return subset
+
 
     def __eq__(self, other):
         """Equality comparison for StructuredDatasets.
@@ -347,6 +363,8 @@ class StructuredDataset(Dataset):
                 this dataset contains mappings for label and/or protected
                 attribute values to strings in the `metadata`, this method will
                 convert those as well.
+            sep (char): Separator between the prefix in the dummy indicators and
+                the dummy-coded categorical levels.
             set_category (bool): Set the de-dummy coded features to categorical
                 type.
 
@@ -416,14 +434,25 @@ class StructuredDataset(Dataset):
         return None
 
     def split(self, num_or_size_splits, shuffle=False, seed=None):
-        """Split the dataset into multiple datasets
+        """Split this dataset into multiple partitions.
+
         Args:
-            num_or_size_splits (list or int):
-            shuffle (bool):
-            seed (int or array_like): takes the same argument as `numpy.random.seed()`
-            function
+            num_or_size_splits (array or int): If `num_or_size_splits` is an
+                int, *k*, the value is the number of equal-sized folds to make
+                (if *k* does not evenly divide the dataset these folds are
+                approximately equal-sized). If `num_or_size_splits` is an array
+                of type int, the values are taken as the indices at which to
+                split the dataset. If the values are floats (< 1.), they are
+                considered to be fractional proportions of the dataset at which
+                to split.
+            shuffle (bool, optional): Randomly shuffle the dataset before
+                splitting.
+            seed (int or array_like): Takes the same argument as
+                :func:`numpy.random.seed()`.
+
         Returns:
-            list: Each element of this list is a dataset obtained during the split
+            list: Splits. Contains *k* or `len(num_or_size_splits) + 1`
+            datasets depending on `num_or_size_splits`.
         """
 
         # Set seed

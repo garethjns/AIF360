@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 
 import pandas as pd
@@ -33,7 +28,7 @@ class GermanDataset(StandardDataset):
 
     def __init__(self, label_name='credit', favorable_classes=[1],
                  protected_attribute_names=['sex', 'age'],
-                 privileged_classes=[['male'], lambda x: x >= 25],
+                 privileged_classes=[['male'], lambda x: x > 25],
                  instance_weights_name=None,
                  categorical_features=['status', 'credit_history', 'purpose',
                      'savings', 'employment', 'other_debtors', 'property',
@@ -45,7 +40,7 @@ class GermanDataset(StandardDataset):
         """See :obj:`StandardDataset` for a description of the arguments.
 
         By default, this code converts the 'age' attribute to a binary value
-        where privileged is `age >= 25` and unprivileged is `age < 25` as
+        where privileged is `age > 25` and unprivileged is `age <= 25` as
         proposed by Kamiran and Calders [1]_.
 
         References:

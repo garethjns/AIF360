@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
@@ -33,7 +28,7 @@ def test_adult():
     scaler = MinMaxScaler(copy=False)
     # ad.features = scaler.fit_transform(ad.features)
 
-    train, test = ad.split([32561])
+    test, train = ad.split([16281])
     assert np.any(test.labels)
 
     train.features = scaler.fit_transform(train.features)

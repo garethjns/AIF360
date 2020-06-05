@@ -28,11 +28,6 @@
 # under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import numpy as np
 from scipy.optimize import linprog
 
@@ -90,8 +85,8 @@ class EqOddsPostprocessing(Transformer):
             privileged_groups=self.privileged_groups)
 
         # compute basic statistics
-        sbr = metric.num_instances(privileged=True) / metric.num_instances()
-        obr = metric.num_instances(privileged=False) / metric.num_instances()
+        sbr = metric.base_rate(privileged=True)
+        obr = metric.base_rate(privileged=False)
 
         fpr0 = metric.false_positive_rate(privileged=True)
         fpr1 = metric.false_positive_rate(privileged=False)

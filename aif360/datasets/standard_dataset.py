@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from logging import warning
 
 import numpy as np
@@ -123,7 +118,7 @@ class StandardDataset(BinaryLabelDataset):
                 unprivileged_values = list(set(df[attr]).difference(vals))
             else:
                 # find all instances which match any of the attribute values
-                priv = np.logical_or.reduce(np.equal.outer(vals, df[attr]))
+                priv = np.logical_or.reduce(np.equal.outer(vals, df[attr].to_numpy()))
                 df.loc[priv, attr] = privileged_values[0]
                 df.loc[~priv, attr] = unprivileged_values[0]
 
@@ -143,8 +138,8 @@ class StandardDataset(BinaryLabelDataset):
             unfavorable_label = set(df[label_name]).difference(favorable_classes).pop()
         else:
             # find all instances which match any of the favorable classes
-            pos = np.logical_or.reduce(np.equal.outer(favorable_classes,
-                                                      df[label_name]))
+            pos = np.logical_or.reduce(np.equal.outer(favorable_classes, 
+                                                      df[label_name].to_numpy()))
             df.loc[pos, label_name] = favorable_label
             df.loc[~pos, label_name] = unfavorable_label
 

@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 
 import pandas as pd
@@ -71,9 +66,12 @@ class AdultDataset(StandardDataset):
             >>> label_map = {1.0: '>50K', 0.0: '<=50K'}
             >>> protected_attribute_maps = [{1.0: 'Male', 0.0: 'Female'}]
             >>> ad = AdultDataset(protected_attribute_names=['sex'],
+            ... categorical_features=['workclass', 'education', 'marital-status',
+            ... 'occupation', 'relationship', 'native-country', 'race'],
             ... privileged_classes=[['Male']], metadata={'label_map': label_map,
             ... 'protected_attribute_maps': protected_attribute_maps})
 
+            Note that we are now adding `race` as a `categorical_features`.
             Now this information will stay attached to the dataset and can be
             used for more descriptive visualizations.
         """
@@ -104,7 +102,7 @@ class AdultDataset(StandardDataset):
             import sys
             sys.exit(1)
 
-        df = pd.concat([train, test], ignore_index=True)
+        df = pd.concat([test, train], ignore_index=True)
 
         super(AdultDataset, self).__init__(df=df, label_name=label_name,
             favorable_classes=favorable_classes,

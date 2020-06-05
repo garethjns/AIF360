@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 from aif360.explainers import Explainer
 from aif360.metrics import Metric
 
@@ -213,8 +208,8 @@ class MetricTextExplainer(Explainer):
             self.metric.generalized_entropy_index(alpha=alpha))
 
     def mean_difference(self):
-        return ("Mean difference (mean label value on privileged instances - "
-                "mean label value on unprivileged instances): {}".format(
+        return ("Mean difference (mean label value on unprivileged instances - "
+                "mean label value on privileged instances): {}".format(
                     self.metric.mean_difference()))
 
     def negative_predictive_value(self, privileged=None):
